@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "dgSpecHash": "o8WLyUse8M8=",
+  "success": true,
+  "projectFilePath": "/home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/Host.csproj",
+  "expectedPackageFiles": [
+    "/home/maskedk/.nuget/packages/microsoft.aspnetcore.signalr/1.2.9/microsoft.aspnetcore.signalr.1.2.9.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1510",
+      "level": "Warning",
+      "message": "PackageReference Microsoft.AspNetCore.SignalR will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.",
+      "projectPath": "/home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/Host.csproj",
+      "warningLevel": 1,
+      "filePath": "/home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/Host.csproj",
+      "libraryId": "Microsoft.AspNetCore.SignalR",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    }
+  ]
+}
