@@ -26,3 +26,4 @@
 /home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/obj/Debug/net10.0/Host.pdb
 /home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/obj/Debug/net10.0/Host.genruntimeconfig.cache
 /home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/obj/Debug/net10.0/ref/Host.dll
+/home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/obj/Debug/net10.0/Host.sourcelink.json
