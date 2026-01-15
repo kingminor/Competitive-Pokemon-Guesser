@@ -1,10 +1,3 @@
-/home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/obj/Debug/net10.0/rpswa.dswa.cache.json
-/home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/obj/Debug/net10.0/Host.GeneratedMSBuildEditorConfig.editorconfig
-/home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/obj/Debug/net10.0/Host.AssemblyInfoInputs.cache
-/home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/obj/Debug/net10.0/Host.AssemblyInfo.cs
-/home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/obj/Debug/net10.0/Host.csproj.CoreCompileInputs.cache
-/home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/obj/Debug/net10.0/Host.MvcApplicationPartsAssemblyInfo.cache
-/home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/obj/Debug/net10.0/Host.sourcelink.json
 /home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/bin/Debug/net10.0/appsettings.Development.json
 /home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/bin/Debug/net10.0/appsettings.json
 /home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/bin/Debug/net10.0/Host.staticwebassets.endpoints.json
@@ -13,6 +6,13 @@
 /home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/bin/Debug/net10.0/Host.runtimeconfig.json
 /home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/bin/Debug/net10.0/Host.dll
 /home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/bin/Debug/net10.0/Host.pdb
+/home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/obj/Debug/net10.0/rpswa.dswa.cache.json
+/home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/obj/Debug/net10.0/Host.GeneratedMSBuildEditorConfig.editorconfig
+/home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/obj/Debug/net10.0/Host.AssemblyInfoInputs.cache
+/home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/obj/Debug/net10.0/Host.AssemblyInfo.cs
+/home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/obj/Debug/net10.0/Host.csproj.CoreCompileInputs.cache
+/home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/obj/Debug/net10.0/Host.MvcApplicationPartsAssemblyInfo.cache
+/home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/obj/Debug/net10.0/Host.sourcelink.json
 /home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/obj/Debug/net10.0/rjimswa.dswa.cache.json
 /home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/obj/Debug/net10.0/rjsmrazor.dswa.cache.json
 /home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/obj/Debug/net10.0/rjsmcshtml.dswa.cache.json
@@ -27,3 +27,4 @@
 /home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/obj/Debug/net10.0/Host.pdb
 /home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/obj/Debug/net10.0/Host.genruntimeconfig.cache
 /home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/obj/Debug/net10.0/ref/Host.dll
+/home/maskedk/Documents/BYU-I/CSE 310/compeitive who's that pokemon/src/Host/bin/Debug/net10.0/data/allpokemon.json

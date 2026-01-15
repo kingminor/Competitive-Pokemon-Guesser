@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ShadowDex Game Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.7/signalr.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        input, button { margin: 5px; padding: 5px; }
+        #log { margin-top: 20px; border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: auto; background: #f9f9f9;}
+        img { display: block; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>ShadowDex Game Test</h1>
+
+    <div>
+        <h3>Create Game</h3>
+        Nickname: <input type="text" id="createNickname" placeholder="Your nickname"><br>
+        Max Players: <input type="number" id="maxPlayers" value="4"><br>
+        Time Before Reveal (sec): <input type="number" id="timeBeforeReveal" value="10"><br>
+        <button id="createGameBtn">Create Game</button>
+    </div>
+
+    <div>
+        <h3>Join Game</h3>
+        Nickname: <input type="text" id="joinNickname" placeholder="Your nickname"><br>
+        Game ID: <input type="text" id="joinGameId" placeholder="Game ID"><br>
+        <button id="joinGameBtn">Join Game</button>
+    </div>
+
+    <div>
+        <h3>Game Actions</h3>
+        Player ID: <input type="text" id="playerID" placeholder="Your PlayerID"><br>
+        Game ID: <input type="text" id="actionGameID" placeholder="Game ID"><br>
+        <button id="startGameBtn">Start Game</button><br>
+        Guess Pokemon: <input type="text" id="guessInput" placeholder="Enter Pokemon name">
+        <button id="guessBtn">Submit Guess</button>
+    </div>
+
+    <div id="log"></div>
+
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("http://localhost:5070/GameHub")
+            .withAutomaticReconnect()
+            .build();
+
+        const logDiv = document.getElementById("log");
+
+        function log(message) {
+            const p = document.createElement("p");
+            p.textContent = message;
+            logDiv.appendChild(p);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        // Handle server messages
+        connection.on("Game Created", (gameID, playerID) => {
+            log(`Game Created! GameID: ${gameID}, Your PlayerID: ${playerID}`);
+            document.getElementById("playerID").value = playerID;
+            document.getElementById("actionGameID").value = gameID;
+        });
+
+        connection.on("Joined Game", (playerID) => {
+            log(`Joined Game! Your PlayerID: ${playerID}`);
+            document.getElementById("playerID").value = playerID;
+        });
+
+        connection.on("Error", (msg) => {
+            log(`Error: ${msg}`);
+        });
+
+        connection.on("Game Started", (imageUrl) => {
+            log(`Game Started! Image to guess:`);
+            const img = document.createElement("img");
+            img.src = imageUrl;
+            img.style.height = "150px";
+            logDiv.appendChild(img);
+        });
+
+        connection.on("End Game", (reason, winnerPlayerID, pokemonName) => {
+            if(reason === "Correct Guess") {
+                log(`Player ${winnerPlayerID} guessed correctly! Pokemon was: ${pokemonName}`);
+            } else if(reason === "Time Up") {
+                log(`Time is up! The Pokemon was: ${pokemonName}`);
+            }
+        });
+
+        connection.on("Incorrect Guess", () => {
+            log("Incorrect guess. Try again!");
+        });
+
+        connection.start().then(() => {
+            log("Connected to GameHub");
+        }).catch(err => console.error(err.toString()));
+
+        document.getElementById("createGameBtn").addEventListener("click", async () => {
+            const nickname = document.getElementById("createNickname").value;
+            const maxPlayers = parseInt(document.getElementById("maxPlayers").value);
+            const timeBeforeReveal = parseInt(document.getElementById("timeBeforeReveal").value);
+            await connection.invoke("CreateGame", maxPlayers, timeBeforeReveal, nickname)
+                .catch(err => log(`Error: ${err}`));
+        });
+
+        document.getElementById("joinGameBtn").addEventListener("click", async () => {
+            const nickname = document.getElementById("joinNickname").value;
+            const gameID = document.getElementById("joinGameId").value.toUpperCase();
+            await connection.invoke("JoinGame", nickname, gameID)
+                .catch(err => log(`Error: ${err}`));
+        });
+
+        document.getElementById("startGameBtn").addEventListener("click", async () => {
+            const playerID = document.getElementById("playerID").value;
+            const gameID = document.getElementById("actionGameID").value.toUpperCase();
+            await connection.invoke("StartGame", playerID, gameID)
+                .catch(err => log(`Error: ${err}`));
+        });
+
+        document.getElementById("guessBtn").addEventListener("click", async () => {
+            const playerID = document.getElementById("playerID").value;
+            const gameID = document.getElementById("actionGameID").value.toUpperCase();
+            const guess = document.getElementById("guessInput").value;
+
+            log(`You guessed: ${guess}`);
+            await connection.invoke("GuessPokemon", playerID, gameID, guess)
+                .catch(err => log(`Error: ${err}`));
+        });
+    </script>
+</body>
+</html>
