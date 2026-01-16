@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Timers;
 using Microsoft.AspNetCore.SignalR;
 using ShadowDex.Hubs;
@@ -64,7 +65,7 @@ namespace ShadowDex.Models {
             else return null;
         }
 
-        private async void OnTimeElapsed(object sender, ElapsedEventArgs e)
+        private async Task OnTimeElapsed(object sender, ElapsedEventArgs e)
         {
             EndGame();
 

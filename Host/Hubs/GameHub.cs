@@ -51,7 +51,7 @@ namespace ShadowDex.Hubs
                 }
             }
             catch (Exception ex){
-                Console.WriteLine("Error Starting Game: ", ex);
+                Console.WriteLine("Error Starting Game: " + ex);
                 await Clients.Caller.SendAsync("Error", ex);
             }
         }
