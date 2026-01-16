@@ -65,7 +65,7 @@ namespace ShadowDex.Models {
             else return null;
         }
 
-        private async Task OnTimeElapsed(object sender, ElapsedEventArgs e)
+        private async void OnTimeElapsed(object sender, ElapsedEventArgs e)
         {
             EndGame();
 
