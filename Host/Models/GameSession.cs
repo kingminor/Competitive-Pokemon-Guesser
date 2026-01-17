@@ -57,6 +57,7 @@ namespace ShadowDex.Models {
         // Returns null if wrong, returns name if right
         public string CheckGuess(string guess) {
             if(string.IsNullOrWhiteSpace(guess)) return null;
+            if(currentPokemon == null) return null;
 
             if(guess.ToLower() == currentPokemon.Name.ToLower()){
                 EndGame();
@@ -67,13 +68,13 @@ namespace ShadowDex.Models {
 
         private async void OnTimeElapsed(object sender, ElapsedEventArgs e)
         {
-            EndGame();
-
             if(currentPokemon != null) {
                 await _hubContext.Clients.Group(GameID).SendAsync("End Game", "Time Up", currentPokemon.Name);
+                currentPokemon = null;
+                EndGame();
             }
 
-            currentPokemon = null;
+            //currentPokemon = null;
         }
 
         public bool IsPlayerInGame(string playerID) {

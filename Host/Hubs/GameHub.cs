@@ -57,7 +57,12 @@ namespace ShadowDex.Hubs
         }
 
         public async Task GuessPokemon(string playerID, string gameID, string guess) {
-            SessionManager.Sessions.TryGetValue(gameID, out var game);
+            if (!SessionManager.Sessions.TryGetValue(gameID, out var game))
+            {
+                await Clients.Caller.SendAsync("Error", $"Game {gameID} not found.");
+                return;
+            }
+            
             if(game.IsPlayerInGame(playerID)) {
                 var result = game.CheckGuess(guess);
                 if(result != null) {
