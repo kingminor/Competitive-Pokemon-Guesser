@@ -10,13 +10,13 @@ namespace ShadowDex.Models {
         public string GameID {get;set;}
         public bool GameStarted {get; private set;}
 
+        // Useful Things
         private readonly IHubContext<GameHub> _hubContext;
         private List<Player> _players = new List<Player>();
 
         //Session Settings
         private int _maxPlayers;
         private int _timeBeforeReveal;
-        //private int _pokemonPerRound; MIGHT ADD BACK, CURRENTLY REMOVED
 
         //Private Into
         private Pokemon currentPokemon;
@@ -68,11 +68,12 @@ namespace ShadowDex.Models {
 
         private async void OnTimeElapsed(object sender, ElapsedEventArgs e)
         {
-            if(currentPokemon != null) {
-                await _hubContext.Clients.Group(GameID).SendAsync("End Game", "Time Up", currentPokemon.Name);
-                currentPokemon = null;
-                EndGame();
-            }
+            
+            await _hubContext.Clients.Group(GameID).SendAsync("End Game", "Time Up", currentPokemon.Name);
+            //currentPokemon = null;
+            EndGame();
+            return;
+            
 
             //currentPokemon = null;
         }

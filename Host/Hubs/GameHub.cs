@@ -1,80 +1,83 @@
 using Microsoft.AspNetCore.SignalR;
 using ShadowDex.Managers;
 using ShadowDex.Models;
+using System.Collections.Concurrent;
 
 namespace ShadowDex.Hubs
 {
     public class GameHub : Hub
     {
         private readonly IHubContext<GameHub> _hubContext;
+        private ConcurrentDictionary<string, Player> ConnectedPlayers = new ConcurrentDictionary<string, Player>();
 
         public GameHub(IHubContext<GameHub> hubContext)
         {
             _hubContext = hubContext;
         }
 
-        public async Task CreateGame(int maxPlayers, int timeBeforeReveal, string nickname){
-            string gameID = SessionManager.GenerateGameId();
-            GameSession generatedSession = new GameSession(gameID, maxPlayers, timeBeforeReveal, _hubContext);
-            SessionManager.Sessions.TryAdd(gameID, generatedSession);
-            Player newPlayer = new Player(nickname);
-            generatedSession.AddPlayer(newPlayer);
-            await Clients.Caller.SendAsync("Game Created", gameID, newPlayer.PlayerID);
+        public override async Task OnConnectedAsync() {
+            string connectionId = Context.ConnectionId;
+            var player = new Player(connectionId);
+            ConnectedPlayers.TryAdd(connectionId, player);
+
+            await Clients.Caller.SendAsync("Connected", player.PlayerID);
+
+            await base.OnConnectedAsync();
+        }
+
+        public async Task EditNickName(string playerID, string nickname) {
+            ConnectedPlayers.TryGetValue(playerID, out var playerData);
+            if(playerData != null) {
+                playerData.NickName = nickname;
+                await Clients.Caller.SendAsync("Nickname Changed");
+            }
+            else {
+                await Clients.Caller.SendAsync("Error", $"Player Not Found With ID: {playerID}");
+            }
+        }
+
+        public async Task CreateGame(int maxPlayers, int timeBeforeReveal, string playerID){
+
+            var gameID = SessionManager.CreateGame(maxPlayers, timeBeforeReveal, _hubContext);
+            
+            ConnectedPlayers.TryGetValue(playerID, out var player);
+            SessionManager.AddPlayerToGame(gameID, player);
+
+            await Clients.Caller.SendAsync("Game Created", gameID);
             await Groups.AddToGroupAsync(Context.ConnectionId, gameID);
         }
 
-        public async Task JoinGame(string nickname, string gameID)
+        public async Task JoinGame(string playerID, string gameID)
         {
-            Player newPlayer = new Player(nickname);
-            if(SessionManager.Sessions.TryGetValue(gameID, out GameSession session)){
-                if(session.AddPlayer(newPlayer)) {
-                    await Clients.Caller.SendAsync("Joined Game", newPlayer.PlayerID);
-                    await Groups.AddToGroupAsync(Context.ConnectionId, gameID);
-                }
-                else {
-                    await Clients.Caller.SendAsync("Error", "Session Full");
-                }
+            ConnectedPlayers.TryGetValue(playerID, out var player);
+            if(SessionManager.AddPlayerToGame(gameID, player)){
+                await Clients.Caller.SendAsync("Joined Game");
+                await Groups.AddToGroupAsync(Context.ConnectionId, gameID);
             }
             else {
-                await Clients.Caller.SendAsync("Error", "Session Not Found");
+                await Clients.Caller.SendAsync("Error");
             }
         }
 
-        public async Task StartGame(string playerID, string gameID) {
-            try {
-                SessionManager.Sessions.TryGetValue(gameID, out var game);
-                if(game.IsPlayerInGame(playerID)) {
-                    game.StartRound();
-                }
-                else {
-                    await Clients.Caller.SendAsync("Error", $"You are not in the group: {gameID}");
-                }
-            }
-            catch (Exception ex){
-                Console.WriteLine("Error Starting Game: " + ex);
-                await Clients.Caller.SendAsync("Error", ex);
-            }
+        public async Task StartGame(string playerID) {
+            SessionManager.StartGame(playerID);
         }
 
-        public async Task GuessPokemon(string playerID, string gameID, string guess) {
-            if (!SessionManager.Sessions.TryGetValue(gameID, out var game))
+        public async Task GuessPokemon(string playerID, string guess) {
+            var gameSession = SessionManager.GetGameFromPlayerID(playerID);
+            if (gameSession == null)
             {
-                await Clients.Caller.SendAsync("Error", $"Game {gameID} not found.");
+                await Clients.Caller.SendAsync("Error");
                 return;
             }
             
-            if(game.IsPlayerInGame(playerID)) {
-                var result = game.CheckGuess(guess);
-                if(result != null) {
-                    await Clients.Group(gameID).SendAsync("End Game", "Correct Guess", playerID, result);
-                }
-                else {
-                    await Clients.Caller.SendAsync("Incorrect Guess");
-                }
-
+            
+            var result = gameSession.CheckGuess(guess);
+            if(result != null) {
+                await Clients.Group(gameSession.GameID).SendAsync("End Game", "Correct Guess", playerID, result);
             }
             else {
-                await Clients.Caller.SendAsync("Error", $"You are not in the game: {gameID}");
+                await Clients.Caller.SendAsync("Incorrect Guess");
             }
         }
     }
