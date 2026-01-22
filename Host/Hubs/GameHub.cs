@@ -8,7 +8,6 @@ namespace ShadowDex.Hubs
     public class GameHub : Hub
     {
         private readonly IHubContext<GameHub> _hubContext;
-        private ConcurrentDictionary<string, Player> ConnectedPlayers = new ConcurrentDictionary<string, Player>();
 
         public GameHub(IHubContext<GameHub> hubContext)
         {
@@ -18,7 +17,7 @@ namespace ShadowDex.Hubs
         public override async Task OnConnectedAsync() {
             string connectionId = Context.ConnectionId;
             var player = new Player(connectionId);
-            ConnectedPlayers.TryAdd(connectionId, player);
+            PlayerManager.ConnectedPlayers.TryAdd(player.PlayerID, player);
 
             await Clients.Caller.SendAsync("Connected", player.PlayerID);
 
@@ -26,7 +25,7 @@ namespace ShadowDex.Hubs
         }
 
         public async Task EditNickName(string playerID, string nickname) {
-            ConnectedPlayers.TryGetValue(playerID, out var playerData);
+            PlayerManager.ConnectedPlayers.TryGetValue(playerID, out var playerData);
             if(playerData != null) {
                 playerData.NickName = nickname;
                 await Clients.Caller.SendAsync("Nickname Changed");
@@ -37,25 +36,29 @@ namespace ShadowDex.Hubs
         }
 
         public async Task CreateGame(int maxPlayers, int timeBeforeReveal, string playerID){
-
             var gameID = SessionManager.CreateGame(maxPlayers, timeBeforeReveal, _hubContext);
-            
-            ConnectedPlayers.TryGetValue(playerID, out var player);
-            SessionManager.AddPlayerToGame(gameID, player);
+
+            if(PlayerManager.ConnectedPlayers.TryGetValue(playerID, out var player) && player != null) {
+                SessionManager.AddPlayerToGame(gameID, player);
+            } else {
+                await Clients.Caller.SendAsync("Error", $"Player not found with ID: {playerID}");
+                return;
+            }
 
             await Clients.Caller.SendAsync("Game Created", gameID);
             await Groups.AddToGroupAsync(Context.ConnectionId, gameID);
         }
 
+
         public async Task JoinGame(string playerID, string gameID)
         {
-            ConnectedPlayers.TryGetValue(playerID, out var player);
+            PlayerManager.ConnectedPlayers.TryGetValue(playerID, out var player);
             if(SessionManager.AddPlayerToGame(gameID, player)){
                 await Clients.Caller.SendAsync("Joined Game");
                 await Groups.AddToGroupAsync(Context.ConnectionId, gameID);
             }
             else {
-                await Clients.Caller.SendAsync("Error");
+                await Clients.Caller.SendAsync("Error", "Unable to add Player to Game");
             }
         }
 
@@ -67,7 +70,7 @@ namespace ShadowDex.Hubs
             var gameSession = SessionManager.GetGameFromPlayerID(playerID);
             if (gameSession == null)
             {
-                await Clients.Caller.SendAsync("Error");
+                await Clients.Caller.SendAsync("Error", "Unable to Find Game");
                 return;
             }
             

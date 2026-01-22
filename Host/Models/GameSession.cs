@@ -68,15 +68,15 @@ namespace ShadowDex.Models {
 
         private async void OnTimeElapsed(object sender, ElapsedEventArgs e)
         {
-            
-            await _hubContext.Clients.Group(GameID).SendAsync("End Game", "Time Up", currentPokemon.Name);
-            //currentPokemon = null;
-            EndGame();
-            return;
-            
+            if (currentPokemon == null) return;
 
-            //currentPokemon = null;
+            var pokemonName = currentPokemon.Name;
+            EndGame();
+            currentPokemon = null;
+
+            await _hubContext.Clients.Group(GameID).SendAsync("End Game", "Time Up", pokemonName);
         }
+
 
         public bool IsPlayerInGame(string playerID) {
             bool flag = false;

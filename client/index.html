@@ -4,10 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.7/signalr.min.js"></script>
-    <script src="main.js" defer></script>
+    <script src="index.js" defer></script>
     <title>ShadowDex</title>
 </head>
 <body>
-    
+    <main id="main">
+        <form id="create-game">
+            <h1>Create Game</h1>
+            <label for="create-nickname">Nickname:</label>
+            <input id="create-nickname" type="text" name="nickname" required>
+            <label for="max-players">Max Players: </label>
+            <input id="max-players" type="number" name="maxPlayers" required>
+            <label for="time-before-reveal">Time Before Reveal (Sec):</label>
+            <input id="time-before-reveal" type="number" name="timeBeforeReveal" required>
+            <input type="submit" value="Create Game">
+        </form>
+        <form id="join-game">
+            <h1>Join Game</h1>
+            <label for="join-nickname">Nickname:</label>
+            <input id="join-nickname" type="text" name="nickname" required>
+            <label for="game-id">Game ID:</label>
+            <input id="game-id" type="text" name="gameID" required>
+            <input type="submit" value="Join Game">
+        </form>
+        <div id="game-section">
+            <h1>Join Code: </h1>
+            <button id="startGameBtn">Start Game</button>
+            <div id="guessing-section">
+                <img id="pkmn-image" src="img/unknown-texture.png">
+                <input id="whos-that-pokemon">
+                <button id="guessPokemonBtn">Guess Pokemon</button>
+            </div>
+        </div>
+    </main>
 </body>
 </html>
