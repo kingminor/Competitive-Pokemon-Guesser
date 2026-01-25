@@ -54,7 +54,8 @@ connection.on("End Game", (reason, winnerPlayerID, pokemonName) => {
     if(reason === "Correct Guess"){
         console.log(`Player ${winnerPlayerID} guessed correctly! Pokemon was: ${pokemonName}`);
     }
-    else if (reason === "Time UP"){
+    else if (reason === "Time Up"){
+        console.log(pokemonName);
         console.log(`Time is up! The Pokemon was ${pokemonName}`);
     }
 });
@@ -109,4 +110,4 @@ guessPokemonBtn.addEventListener("click", async (event) => {
     let value = guessInput.value.trim();
 
     await connection.invoke("GuessPokemon", playerID, value);
-})
+});

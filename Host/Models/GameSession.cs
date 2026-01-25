@@ -74,7 +74,7 @@ namespace ShadowDex.Models {
             EndGame();
             currentPokemon = null;
 
-            await _hubContext.Clients.Group(GameID).SendAsync("End Game", "Time Up", pokemonName);
+            await _hubContext.Clients.Group(GameID).SendAsync("End Game", "Time Up", null, pokemonName);
         }
 
 
