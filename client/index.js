@@ -90,6 +90,7 @@ joinGameForm.addEventListener("submit", async (event) => {
     await connection.invoke("EditNickName", playerID, nickname);
 
     const gameToJoinID = joinGameForm.gameID.value;
+    gameID = gameToJoinID;
     await connection.invoke("JoinGame", playerID, gameToJoinID);
 });
 
