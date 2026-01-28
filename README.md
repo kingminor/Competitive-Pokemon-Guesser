@@ -4,7 +4,7 @@ A competitive version of who's that pokemon to be played with friends. It is mis
 
 ## Instructions for Build and Use
 
-[Software Demo](Put_Your_Video_Link_Here)
+[Software Demo Coming SOON (tm)](Put_Your_Video_Link_Here)
 
 Steps to build and/or run the software:
 
