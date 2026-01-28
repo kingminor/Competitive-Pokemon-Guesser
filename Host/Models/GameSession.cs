@@ -45,9 +45,9 @@ namespace ShadowDex.Models {
 
         public async Task StartRound(){
             if(GameStarted) return;
+            GameStarted = true;
             currentPokemon = PokemonManager.GetRandomPokemon();
             string ImageURL = $"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{currentPokemon.PokedexNumber}.png";
-            GameStarted = true;
             await _hubContext.Clients.Group(GameID).SendAsync("Game Started", ImageURL);
 
             timer.Interval = _timeBeforeReveal * 1000; // milliseconds
